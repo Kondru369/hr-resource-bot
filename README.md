@@ -72,10 +72,20 @@ An intelligent HR assistant chatbot that helps HR teams find employees by answer
    ```bash
    python run_backend.py
    ```
+   Or manually:
+   ```bash
+   cd backend
+   uvicorn app:app --reload --host 127.0.0.1 --port 8000
+   ```
 
 6. **Start the frontend (in a new terminal)**
    ```bash
    python run_frontend.py
+   ```
+   Or manually:
+   ```bash
+   cd frontend
+   streamlit run streamlit_app.py
    ```
 
 7. **Access the application**
@@ -143,20 +153,22 @@ Search employees by skills or experience.
 - **ChatGPT**: Helped with debugging and optimization strategies
 
 ### AI Assistance Breakdown
-- **Code Generation**: ~60% - AI helped generate the RAG engine, API endpoints, and frontend components
-- **Architecture Decisions**: ~25% - AI assisted with technology choices and system design
-- **Debugging**: ~10% - AI helped troubleshoot integration issues
+- **Code Generation**: ~70% - AI helped generate the RAG engine, API endpoints, and frontend components
+- **Architecture Decisions**: ~20% - AI assisted with technology choices and system design
+- **Debugging**: ~5% - AI helped troubleshoot integration issues
 - **Manual Implementation**: ~5% - Custom business logic and specific filtering requirements
 
 ### AI-Generated Solutions
 - **RAG Pipeline**: AI suggested the sentence transformers + FAISS approach for semantic search
 - **API Structure**: AI recommended FastAPI for automatic documentation and async support
 - **Frontend Design**: AI helped design the Streamlit chat interface with proper state management
+- **Skill Detection**: AI assisted with implementing intelligent query parsing and skill categorization
 
 ### Challenges Where AI Couldn't Help
 - **Business Logic**: Specific filtering requirements for skill categories and availability
 - **Data Structure**: Custom employee data format and project categorization
 - **Integration Issues**: Specific error handling for API failures and edge cases
+- **Testing & Validation**: Manual testing to ensure all query types work correctly
 
 ## Technical Decisions
 
@@ -210,11 +222,21 @@ Search employees by skills or experience.
 3. Access the chat interface at http://localhost:8501
 
 ### Sample Interactions
-- **Query**: "I need someone experienced with machine learning for a healthcare project"
-- **Response**: AI-generated recommendations with relevant employee profiles
+- **Query**: "Who are the most experienced employees (7+ years)?"
+- **Response**: Lists Omar Hassan (8 years), James Miller (7 years), David Lee (7 years) with availability status
 
-- **Query**: "Find developers who know both AWS and Docker"
-- **Response**: Filtered list of DevOps engineers with matching skills
+- **Query**: "Find React Native developers"
+- **Response**: Shows Priya Singh with React Native skills and availability
+
+- **Query**: "Who can work on a DevOps project?"
+- **Response**: Lists Rahul Verma, Daniel Kim, Liam Brown with their DevOps skills and availability
+
+- **Query**: "Show me Machine Learning specialists"
+- **Response**: Shows Sarah Chen and Michael Rodriguez with ML skills and availability status
+
+### Live Demo
+- **Streamlit Cloud**: [Your deployed URL will go here]
+- **GitHub Repository**: [Your GitHub repo URL will go here]
 
 ## Contributing
 

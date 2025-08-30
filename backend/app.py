@@ -27,17 +27,17 @@ def search_employees(query: str = Query(..., description="Search for skills or e
   
     response_lines = []
     for emp in employees:
-        availability = "available ✅" if emp["availability"].lower() == "available" else "unavailable ❌"
+        availability = "available" if emp["availability"].lower() == "available" else "unavailable"
         response_lines.append(
             f"{emp['name']} has {emp['experience_years']} years of experience in {', '.join(emp['skills'])}. "
-            f"They worked on {', '.join(emp['projects'])}. Currently {availability}."
+            f"They worked on {emp['projects']}. Currently {availability}."
         )
 
     response_text = "\n".join(response_lines)
 
     return {
         "response": response_text,
-        "employees": employees 
+        "employees": employees
     }
 
 
@@ -52,7 +52,6 @@ def chat(request: ChatRequest):
     if exp_match:
         min_exp = int(exp_match.group(1))
 
-
     skill_category = None
     if "mobile app" in q_lower or "ios" in q_lower or "flutter" in q_lower or "react native" in q_lower:
         skill_category = "mobile app"
@@ -66,14 +65,11 @@ def chat(request: ChatRequest):
   
     available_only = False
 
-   
     if "devops" in q_lower or "kubernetes" in q_lower:
         available_only = True
     elif "available" in q_lower:
         available_only = True
 
-
-   
     results = rag.search(
         request.query, 
         min_experience=min_exp, 
@@ -84,7 +80,6 @@ def chat(request: ChatRequest):
     if not results:
         return {"response": f"Sorry, no employees match '{request.query}'.", "context": ""}
 
-    
     context = "\n".join([
         f"{emp['name']} has {emp['experience_years']} years of experience in {', '.join(emp['skills'])}. "
         f"Projects: {', '.join(emp['projects'])}. Availability: {emp['availability']}."

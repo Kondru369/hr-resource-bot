@@ -24,17 +24,17 @@ class RAGEngine:
     def search(self, query, k=5, min_experience=None, skill_category=None, available_only=False):
         """
         query: free text query
-        k: top candidates from FAISS
+        k: top candidates from FAISS (increased for better coverage)
         min_experience: optional integer to filter by experience
         skill_category: optional string to filter employees by category (e.g., 'mobile app', 'backend')
         available_only: if True, return only available employees
         """
-        
+        # Step 1: FAISS retrieval for semantic queries
         query_vec = self.model.encode([query])
         scores, indices = self.index.search(np.array(query_vec, dtype="float32"), k)
         candidates = [self.employees[i] for i in indices[0]]
 
-        
+        # Step 2: Boost exact skill matches but keep all candidates
         query_lower = query.lower()
         boosted = []
         normal = []
@@ -47,11 +47,11 @@ class RAGEngine:
                 normal.append(emp)
         results = boosted + normal
 
-        
+        # Step 3: Filter by min_experience (check all employees if numeric query)
         if min_experience is not None:
             results = [emp for emp in self.employees if emp["experience_years"] >= min_experience]
 
-        
+        # Step 4: Filter by skill_category
         if skill_category:
             skill_category = skill_category.lower()
             mapping = {
@@ -69,8 +69,7 @@ class RAGEngine:
                         filtered.append(emp)
             results = filtered
 
-
-        
+        # Step 5: Filter by availability if requested
         if available_only:
             results = [emp for emp in results if emp["availability"].lower() == "available"]
 

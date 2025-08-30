@@ -9,7 +9,7 @@ BACKEND_URL = "http://127.0.0.1:8000/chat"
 if "messages" not in st.session_state:
     st.session_state["messages"] = []
 
-st.title("HR Chatbot with RAG + Groq")
+st.title("HR Resource Query Chatbot")
 
 
 for msg in st.session_state["messages"]:
