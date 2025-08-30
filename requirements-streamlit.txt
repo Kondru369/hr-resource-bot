@@ -1,0 +1,14 @@
+# Streamlit Cloud Optimized Requirements
+streamlit
+fastapi
+uvicorn
+requests
+python-dotenv
+groq
+
+# Lighter NLP alternatives
+sentence-transformers
+faiss-cpu
+
+# PyTorch (lighter version)
+torch

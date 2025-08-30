@@ -1,6 +1,6 @@
 # Quick Start Guide
 
-## 🚀 Get Started in 5 Minutes
+## Get Started in 5 Minutes
 
 ### 1. Setup Environment
 ```bash
@@ -43,7 +43,7 @@ Open http://localhost:8501 and try these queries:
 - "Show me Machine Learning specialists"
 - "Find available Python developers"
 
-## 🧪 Test Queries
+## Test Queries
 
 The chatbot handles various query types:
 
@@ -64,15 +64,15 @@ The chatbot handles various query types:
 - "Who has worked on healthcare projects?"
 - "Find people with e-commerce experience"
 
-## 📊 Sample Responses
+## Sample Responses
 
 The system provides:
 - Employee names and experience years
 - Key skills and relevant projects
-- Availability status (✅ available / ❌ busy)
+- Availability status ( available / busy)
 - Natural language explanations
 
-## 🔧 Troubleshooting
+##  Troubleshooting
 
 **Backend won't start:**
 - Check if port 8000 is free
