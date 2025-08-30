@@ -16,22 +16,44 @@ except ImportError as e:
     st.error(f"Import error: {e}")
     st.stop()
 
-# Initialize RAG engine
+# Initialize RAG engine with detailed debugging
 @st.cache_resource
 def load_rag_engine():
     try:
-        # Try to load from backend directory
-        backend_path = Path(__file__).parent.parent / "backend" / "employees.json"
-        if backend_path.exists():
-            st.success(f"Loading employees from: {backend_path}")
-            rag = RAGEngine(str(backend_path))
-            st.success(f"Successfully loaded {len(rag.employees)} employees")
-            return rag
-        else:
-            st.error(f"employees.json not found at: {backend_path}")
-            return None
+        # Try multiple possible paths
+        possible_paths = [
+            Path(__file__).parent.parent / "backend" / "employees.json",
+            Path("backend") / "employees.json",
+            Path("employees.json")
+        ]
+        
+        for path in possible_paths:
+            if path.exists():
+                st.success(f"Found employees.json at: {path}")
+                
+                # Load and verify the JSON file directly
+                with open(path, 'r') as f:
+                    employees_data = json.load(f)
+                
+                st.success(f"Direct JSON load: {len(employees_data)} employees found")
+                
+                # Create RAG engine
+                rag = RAGEngine(str(path))
+                st.success(f"RAG engine loaded: {len(rag.employees)} employees")
+                
+                # Show first few employees for verification
+                st.info("First 3 employees for verification:")
+                for i, emp in enumerate(rag.employees[:3]):
+                    st.write(f"{i+1}. {emp['name']} - {emp['experience_years']} years")
+                
+                return rag
+        
+        st.error("employees.json not found in any expected location")
+        return None
+        
     except Exception as e:
         st.error(f"Error loading RAG engine: {e}")
+        st.exception(e)  # Show full error details
         return None
 
 # Initialize the app
@@ -47,8 +69,9 @@ if rag is None:
 
 st.title("HR Resource Query Chatbot")
 
-# Display employee count
+# Display employee count with verification
 st.info(f"📊 Total employees in database: {len(rag.employees)}")
+st.success(f"✅ Successfully loaded all {len(rag.employees)} employees!")
 
 # Display chat messages
 for msg in st.session_state["messages"]:
