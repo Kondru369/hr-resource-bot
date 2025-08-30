@@ -62,6 +62,8 @@ class RAGEngine:
         if skill_category:
             skill_category = skill_category.lower()
             mapping = {
+                "react_native": ["react native"],
+                "react": ["react"],
                 "mobile app": ["react native", "flutter", "swift", "ios development", "dart"],
                 "backend": ["java", "spring", "golang", "python", "django", "kubernetes"],
                 "ui/ux": ["ui/ux design", "figma", "adobe xd"],
