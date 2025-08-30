@@ -1,0 +1,162 @@
+[
+  {
+    "id": 1,
+    "name": "Alice Johnson",
+    "skills": ["Python", "React", "AWS"],
+    "experience_years": 5,
+    "projects": ["E-commerce Platform", "Healthcare Dashboard"],
+    "availability": "available"
+  },
+  {
+    "id": 2,
+    "name": "Rahul Verma",
+    "skills": ["Java", "Spring", "Docker", "Kubernetes"],
+    "experience_years": 6,
+    "projects": ["Payment Gateway", "Banking KYC"],
+    "availability": "available"
+  },
+  {
+    "id": 3,
+    "name": "Sarah Chen",
+    "skills": ["Machine Learning", "TensorFlow", "PyTorch", "Computer Vision"],
+    "experience_years": 6,
+    "projects": ["Medical Diagnosis Platform", "X-ray CV Pipeline"],
+    "availability": "available"
+  },
+  {
+    "id": 4,
+    "name": "Michael Rodriguez",
+    "skills": ["Machine Learning", "scikit-learn", "pandas", "MLOps"],
+    "experience_years": 4,
+    "projects": ["Patient Risk Prediction System", "Fraud Detection"],
+    "availability": "busy"
+  },
+  {
+    "id": 5,
+    "name": "Priya Singh",
+    "skills": ["React Native", "TypeScript", "Redux"],
+    "experience_years": 3,
+    "projects": ["Food Delivery App", "Fitness Tracker"],
+    "availability": "available"
+  },
+  {
+    "id": 6,
+    "name": "Daniel Kim",
+    "skills": ["AWS", "Docker", "Terraform"],
+    "experience_years": 5,
+    "projects": ["Cloud Migration", "DevOps Toolkit"],
+    "availability": "busy"
+  },
+  {
+    "id": 7,
+    "name": "Elena Petrova",
+    "skills": ["Python", "NLP", "HuggingFace", "FastAPI"],
+    "experience_years": 4,
+    "projects": ["Chatbot Development", "NLP Pipeline"],
+    "availability": "available"
+  },
+  {
+    "id": 8,
+    "name": "James Miller",
+    "skills": ["C#", ".NET", "Azure"],
+    "experience_years": 7,
+    "projects": ["Hospital Management System", "ERP Software"],
+    "availability": "available"
+  },
+  {
+    "id": 9,
+    "name": "Aisha Khan",
+    "skills": ["Flutter", "Dart", "Firebase"],
+    "experience_years": 3,
+    "projects": ["Ride Sharing App", "E-learning Platform"],
+    "availability": "busy"
+  },
+  {
+    "id": 10,
+    "name": "Carlos Alvarez",
+    "skills": ["Python", "Django", "PostgreSQL"],
+    "experience_years": 6,
+    "projects": ["Inventory Management System", "CRM"],
+    "availability": "available"
+  },
+  {
+    "id": 11,
+    "name": "Mia Taylor",
+    "skills": ["UI/UX Design", "Figma", "Adobe XD"],
+    "experience_years": 5,
+    "projects": ["Travel Booking App", "Portfolio Websites"],
+    "availability": "available"
+  },
+  {
+    "id": 12,
+    "name": "Omar Hassan",
+    "skills": ["Cybersecurity", "Penetration Testing", "SIEM"],
+    "experience_years": 8,
+    "projects": ["Bank Security Audit", "Network Intrusion Detection"],
+    "availability": "busy"
+  },
+  {
+    "id": 13,
+    "name": "Sophia Williams",
+    "skills": ["Data Science", "Pandas", "SQL", "Power BI"],
+    "experience_years": 5,
+    "projects": ["Sales Forecasting", "Business Intelligence Reports"],
+    "availability": "available"
+  },
+  {
+    "id": 14,
+    "name": "Liam Brown",
+    "skills": ["Golang", "Kubernetes", "Microservices"],
+    "experience_years": 6,
+    "projects": ["Logistics Tracking System", "Scalable APIs"],
+    "availability": "available"
+  },
+  {
+    "id": 15,
+    "name": "Emma Garcia",
+    "skills": ["HTML", "CSS", "JavaScript", "Vue.js"],
+    "experience_years": 4,
+    "projects": ["Portfolio Websites", "Landing Pages"],
+    "availability": "busy"
+  },
+  {
+    "id": 16,
+    "name": "David Lee",
+    "skills": ["AI", "NLP", "Transformers"],
+    "experience_years": 7,
+    "projects": ["Text Summarization Tool", "Voice Assistant"],
+    "availability": "available"
+  },
+  {
+    "id": 17,
+    "name": "Isabella Rossi",
+    "skills": ["QA Testing", "Selenium", "Jenkins"],
+    "experience_years": 5,
+    "projects": ["Automated Test Pipelines", "Regression Testing"],
+    "availability": "available"
+  },
+  {
+    "id": 18,
+    "name": "Ethan Johnson",
+    "skills": ["Blockchain", "Solidity", "Web3.js"],
+    "experience_years": 4,
+    "projects": ["NFT Marketplace", "Smart Contracts"],
+    "availability": "busy"
+  },
+  {
+    "id": 19,
+    "name": "Chloe Martin",
+    "skills": ["Swift", "iOS Development", "ARKit"],
+    "experience_years": 3,
+    "projects": ["AR Shopping App", "Fitness App"],
+    "availability": "available"
+  },
+  {
+    "id": 20,
+    "name": "Noah Wilson",
+    "skills": ["Rust", "Distributed Systems", "Kafka"],
+    "experience_years": 6,
+    "projects": ["Real-time Streaming System", "IoT Data Pipeline"],
+    "availability": "available"
+  }
+]

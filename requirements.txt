@@ -1,0 +1,18 @@
+# PyTorch (CPU only) 
+torch==2.4.0 --index-url https://download.pytorch.org/whl/cpu
+torchvision==0.19.0 --index-url https://download.pytorch.org/whl/cpu
+torchaudio==0.19.0 --index-url https://download.pytorch.org/whl/cpu
+
+# NLP / Embeddings
+sentence-transformers
+faiss-cpu
+
+# API + Frontend
+fastapi
+uvicorn
+streamlit
+requests
+python-dotenv
+
+# LLM Integration
+groq
