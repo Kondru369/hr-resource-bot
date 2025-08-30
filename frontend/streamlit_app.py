@@ -89,12 +89,23 @@ if prompt := st.chat_input("Ask about employees, skills, projects..."):
             if "available" in q_lower:
                 available_only = True
 
-            # Search for employees using simplified approach
-            results = rag.search(
-                prompt, 
-                min_experience=min_exp, 
-                available_only=available_only
-            )
+            # Special handling for DevOps and Kubernetes queries
+            if "devops" in q_lower or "kubernetes" in q_lower:
+                # Manually find DevOps-related employees
+                devops_employees = []
+                for emp in rag.employees:
+                    emp_skills_lower = [s.lower() for s in emp["skills"]]
+                    if any(skill in emp_skills_lower for skill in ["docker", "terraform", "aws", "kubernetes"]):
+                        if not available_only or emp["availability"].lower() == "available":
+                            devops_employees.append(emp)
+                results = devops_employees
+            else:
+                # Search for employees using simplified approach
+                results = rag.search(
+                    prompt, 
+                    min_experience=min_exp, 
+                    available_only=available_only
+                )
 
             if not results:
                 answer = f"Sorry, no employees match '{prompt}'."
