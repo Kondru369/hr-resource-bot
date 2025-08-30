@@ -84,31 +84,15 @@ if prompt := st.chat_input("Ask about employees, skills, projects..."):
             if exp_match:
                 min_exp = int(exp_match.group(1))
 
-            # Determine skill category with better distinction
-            skill_category = None
-            if "react native" in q_lower:
-                skill_category = "react_native"
-            elif "react" in q_lower and "native" not in q_lower:
-                skill_category = "react"
-            elif "mobile app" in q_lower or "ios" in q_lower or "flutter" in q_lower:
-                skill_category = "mobile app"
-            elif "backend" in q_lower:
-                skill_category = "backend"
-            elif "ui/ux" in q_lower or "designer" in q_lower or "figma" in q_lower:
-                skill_category = "ui/ux"
-            elif "devops" in q_lower or "docker" in q_lower or "terraform" in q_lower or "aws" in q_lower or "kubernetes" in q_lower:
-                skill_category = "devops"
-
             # Check for availability filter
             available_only = False
             if "available" in q_lower:
                 available_only = True
 
-            # Search for employees
+            # Search for employees using simplified approach
             results = rag.search(
                 prompt, 
                 min_experience=min_exp, 
-                skill_category=skill_category, 
                 available_only=available_only
             )
 
