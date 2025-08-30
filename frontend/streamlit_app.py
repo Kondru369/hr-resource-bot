@@ -87,53 +87,61 @@ if prompt := st.chat_input("Ask about employees, skills, projects..."):
 
     # Process query
     try:
-        # Parse query for experience and skills
         q_lower = prompt.lower()
         
-        # Extract experience requirement
-        min_exp = None
-        exp_match = re.search(r'(\d+)\s*(\+|or more)?\s*years', q_lower)
-        if exp_match:
-            min_exp = int(exp_match.group(1))
-
-        # Determine skill category
-        skill_category = None
-        if "mobile app" in q_lower or "ios" in q_lower or "flutter" in q_lower or "react native" in q_lower:
-            skill_category = "mobile app"
-        elif "backend" in q_lower:
-            skill_category = "backend"
-        elif "ui/ux" in q_lower or "designer" in q_lower or "figma" in q_lower:
-            skill_category = "ui/ux"
-        elif "devops" in q_lower or "docker" in q_lower or "terraform" in q_lower or "aws" in q_lower:
-            skill_category = "devops"
-
-        # Check for availability filter
-        available_only = False
-        if "devops" in q_lower or "kubernetes" in q_lower:
-            available_only = True
-        elif "available" in q_lower:
-            available_only = True
-
-        # Search for employees
-        results = rag.search(
-            prompt, 
-            min_experience=min_exp, 
-            skill_category=skill_category, 
-            available_only=available_only
-        )
-
-        if not results:
-            answer = f"Sorry, no employees match '{prompt}'."
+        # Special handling for total count queries
+        if "total" in q_lower and ("employee" in q_lower or "count" in q_lower):
+            # Return all employees for total count
+            results = rag.employees
+            answer = f"There are {len(results)} employees in total.\n\n"
+            answer += "All employees:\n"
+            for emp in results:
+                answer += f"- {emp['name']} ({emp['experience_years']} years, {emp['availability']})\n"
         else:
-            # Create context for LLM
-            context = "\n".join([
-                f"{emp['name']} has {emp['experience_years']} years of experience in {', '.join(emp['skills'])}. "
-                f"Projects: {', '.join(emp['projects'])}. Availability: {emp['availability']}."
-                for emp in results
-            ])
+            # Parse query for experience and skills
+            min_exp = None
+            exp_match = re.search(r'(\d+)\s*(\+|or more)?\s*years', q_lower)
+            if exp_match:
+                min_exp = int(exp_match.group(1))
 
-            # Generate response using LLM
-            llm_prompt = f"""
+            # Determine skill category
+            skill_category = None
+            if "mobile app" in q_lower or "ios" in q_lower or "flutter" in q_lower or "react native" in q_lower:
+                skill_category = "mobile app"
+            elif "backend" in q_lower:
+                skill_category = "backend"
+            elif "ui/ux" in q_lower or "designer" in q_lower or "figma" in q_lower:
+                skill_category = "ui/ux"
+            elif "devops" in q_lower or "docker" in q_lower or "terraform" in q_lower or "aws" in q_lower:
+                skill_category = "devops"
+
+            # Check for availability filter
+            available_only = False
+            if "devops" in q_lower or "kubernetes" in q_lower:
+                available_only = True
+            elif "available" in q_lower:
+                available_only = True
+
+            # Search for employees
+            results = rag.search(
+                prompt, 
+                min_experience=min_exp, 
+                skill_category=skill_category, 
+                available_only=available_only
+            )
+
+            if not results:
+                answer = f"Sorry, no employees match '{prompt}'."
+            else:
+                # Create context for LLM
+                context = "\n".join([
+                    f"{emp['name']} has {emp['experience_years']} years of experience in {', '.join(emp['skills'])}. "
+                    f"Projects: {', '.join(emp['projects'])}. Availability: {emp['availability']}."
+                    for emp in results
+                ])
+
+                # Generate response using LLM
+                llm_prompt = f"""
 You are an HR assistant. Use ONLY the employees listed in the context below.
 Answer naturally and summarize if multiple employees match.
 You may categorize by skills or availability.
@@ -145,7 +153,7 @@ Context:
 Question: {prompt}
 """
 
-            answer = ask_groq(llm_prompt)
+                answer = ask_groq(llm_prompt)
 
     except Exception as e:
         answer = f"Error processing query: {str(e)}"
