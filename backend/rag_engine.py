@@ -30,25 +30,25 @@ class RAGEngine:
         """
         query_lower = query.lower()
         
-        # For experience-based queries, search all employees first
+        
         if min_experience is not None:
             results = [emp for emp in self.employees if emp["experience_years"] >= min_experience]
-            # Sort by experience years (highest first)
+            
             results.sort(key=lambda x: x["experience_years"], reverse=True)
         else:
-            # Use FAISS for semantic search
+            
             query_vec = self.model.encode([query])
             scores, indices = self.index.search(np.array(query_vec, dtype="float32"), k)
             candidates = [self.employees[i] for i in indices[0]]
             
-            # Also check for exact skill matches across all employees
+            
             exact_matches = []
             for emp in self.employees:
                 emp_skills = [s.lower() for s in emp["skills"]]
                 if any(skill in query_lower for skill in emp_skills):
                     exact_matches.append(emp)
             
-            # Combine exact matches with semantic results, removing duplicates
+            
             all_candidates = exact_matches + candidates
             seen_ids = set()
             results = []
@@ -57,7 +57,7 @@ class RAGEngine:
                     results.append(emp)
                     seen_ids.add(emp["id"])
         
-        # Filter by availability if requested
+       
         if available_only:
             results = [emp for emp in results if emp["availability"].lower() == "available"]
         
