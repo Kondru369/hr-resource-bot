@@ -1,18 +1,18 @@
-# PyTorch (CPU only) - Streamlit Cloud compatible
-torch==2.4.0
-torchvision==0.19.0
-torchaudio==0.19.0
+# Core dependencies
+streamlit>=1.28.0
+fastapi>=0.104.0
+uvicorn>=0.24.0
+requests>=2.31.0
+python-dotenv>=1.0.0
 
-# NLP / Embeddings
-sentence-transformers
-faiss-cpu
-
-# API + Frontend
-fastapi
-uvicorn
-streamlit
-requests
-python-dotenv
+# NLP / Embeddings (Streamlit Cloud compatible)
+sentence-transformers>=2.2.0
+faiss-cpu>=1.7.4
 
 # LLM Integration
-groq
+groq>=0.4.0
+
+# PyTorch (CPU only) - more stable versions
+torch>=2.0.0
+torchvision>=0.15.0
+torchaudio>=0.15.0
