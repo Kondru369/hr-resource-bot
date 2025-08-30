@@ -1,14 +1,11 @@
-
 from fastapi import FastAPI, Query
 from pydantic import BaseModel
 from rag_engine import RAGEngine
 from groq_client import ask_groq
+import re
 
 app = FastAPI()
-
-
 rag = RAGEngine("employees.json")
-
 
 class ChatRequest(BaseModel):
     query: str
@@ -16,69 +13,87 @@ class ChatRequest(BaseModel):
 
 @app.get("/employees/search")
 def search_employees(query: str = Query(..., description="Search for skills or experience")):
-    employees = rag.search(query)
-
-    if not employees:
-        return {
-            "response": f"No employees found for '{query}'.",
-            "employees": []
-        }
-
-  
-    response_lines = []
-    for emp in employees:
-        availability = "available" if emp["availability"].lower() == "available" else "unavailable"
-        response_lines.append(
-            f"{emp['name']} has {emp['experience_years']} years of experience in {', '.join(emp['skills'])}. "
-            f"They worked on {emp['projects']}. Currently {availability}."
-        )
-
-    response_text = "\n".join(response_lines)
-
-    return {
-        "response": response_text,
-        "employees": employees
-    }
-
-
-@app.post("/chat")
-def chat(request: ChatRequest):
-    import re
-    q_lower = request.query.lower()
-
-
+    q_lower = query.lower()
     min_exp = None
     exp_match = re.search(r'(\d+)\s*(\+|or more)?\s*years', q_lower)
     if exp_match:
         min_exp = int(exp_match.group(1))
 
-    skill_category = None
-    if "mobile app" in q_lower or "ios" in q_lower or "flutter" in q_lower or "react native" in q_lower:
-        skill_category = "mobile app"
-    elif "backend" in q_lower:
-        skill_category = "backend"
-    elif "ui/ux" in q_lower or "designer" in q_lower or "figma" in q_lower:
-        skill_category = "ui/ux"
-    elif "devops" in q_lower or "docker" in q_lower or "terraform" in q_lower or "aws" in q_lower:
-        skill_category = "devops"
+    available_only = "available" in q_lower or "devops" in q_lower or "kubernetes" in q_lower
 
-  
-    available_only = False
+   
+    if ("total" in q_lower and ("employee" in q_lower or "count" in q_lower)) \
+       or ("list" in q_lower and "name" in q_lower):
+        return {
+            "response": f"There are {len(rag.employees)} employees in total.\n\n" +
+                        "All employee names: " + " ".join(emp["name"] for emp in rag.employees),
+            "employees": rag.employees
+        }
 
-    if "devops" in q_lower or "kubernetes" in q_lower:
-        available_only = True
-    elif "available" in q_lower:
-        available_only = True
-
-    results = rag.search(
-        request.query, 
-        min_experience=min_exp, 
-        skill_category=skill_category, 
-        available_only=available_only
-    )
+    
+    elif "devops" in q_lower or "docker" in q_lower or "terraform" in q_lower or "aws" in q_lower or "kubernetes" in q_lower:
+        results = []
+        for emp in rag.employees:
+            emp_skills_lower = [s.lower() for s in emp["skills"]]
+            if any(skill in emp_skills_lower for skill in ["docker", "terraform", "aws", "kubernetes"]):
+                if not available_only or emp["availability"].lower() == "available":
+                    results.append(emp)
+    else:
+     
+        results = rag.search(query, min_experience=min_exp, available_only=available_only)
 
     if not results:
-        return {"response": f"Sorry, no employees match '{request.query}'.", "context": ""}
+        return {"response": f"Sorry, no employees match '{query}'.", "employees": []}
+
+    response_lines = []
+    for emp in results:
+        availability = "available" if emp["availability"].lower() == "available" else "unavailable"
+        response_lines.append(
+            f"{emp['name']} has {emp['experience_years']} years of experience in {', '.join(emp['skills'])}. "
+            f"Projects: {', '.join(emp['projects'])}. Currently {availability}."
+        )
+
+    return {"response": "\n".join(response_lines), "employees": results}
+
+
+@app.post("/chat")
+def chat(request: ChatRequest):
+    q_lower = request.query.lower()
+    min_exp = None
+    exp_match = re.search(r'(\d+)\s*(\+|or more)?\s*years', q_lower)
+    if exp_match:
+        min_exp = int(exp_match.group(1))
+
+    available_only = "available" in q_lower or "devops" in q_lower or "kubernetes" in q_lower
+
+    
+    if ("total" in q_lower and ("employee" in q_lower or "count" in q_lower)) \
+       or ("list" in q_lower and "name" in q_lower):
+        return {
+            "response": f"There are {len(rag.employees)} employees in total.\n\n" +
+                        "All employee names: " + " ".join(emp["name"] for emp in rag.employees),
+            "context": "\n".join(
+                f"{emp['name']} has {emp['experience_years']} years of experience in {', '.join(emp['skills'])}. "
+                f"Projects: {', '.join(emp['projects'])}. Availability: {emp['availability']}."
+                for emp in rag.employees
+            ),
+            "employees": rag.employees
+        }
+
+   
+    elif "devops" in q_lower or "docker" in q_lower or "terraform" in q_lower or "aws" in q_lower or "kubernetes" in q_lower:
+        results = []
+        for emp in rag.employees:
+            emp_skills_lower = [s.lower() for s in emp["skills"]]
+            if any(skill in emp_skills_lower for skill in ["docker", "terraform", "aws", "kubernetes"]):
+                if not available_only or emp["availability"].lower() == "available":
+                    results.append(emp)
+    else:
+      
+        results = rag.search(request.query, min_experience=min_exp, available_only=available_only)
+
+    if not results:
+        return {"response": f"Sorry, no employees match '{request.query}'.", "context": "", "employees": []}
 
     context = "\n".join([
         f"{emp['name']} has {emp['experience_years']} years of experience in {', '.join(emp['skills'])}. "
@@ -99,4 +114,4 @@ Question: {request.query}
 """
 
     answer = ask_groq(prompt)
-    return {"response": answer, "context": context}
+    return {"response": answer, "context": context, "employees": results}
